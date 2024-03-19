@@ -1,0 +1,43 @@
+﻿<h3>SearchPage</h3>
+@page "/SearchPage"
+@using SearchProgamModul3.Client.Services
+@using SearchProgamModul3.Shared.Models;
+
+<h3>Search</h3>
+<form @onsubmit="Search">
+    <input type="text" @bind-value="searchTerm" />
+    <button type="submit">Search</button>
+</form>
+
+@if (foundNameFlag)
+{
+    <h3>Names: @searchResult.Query</h3>
+    <h3>DocumentHits @searchResult.DocumentHits</h3>
+    <h3>time used: @searchResult.TimeUsed</h3>
+}
+
+
+@code {
+
+    private string searchTerm;
+    [Inject]
+    public IDatabaseService Service { get; set; }
+    //SearchLogic mSearchLogic = new SearchLogic(new Database());
+
+
+    private SearchResult searchResult = new SearchResult();
+    private bool foundNameFlag;
+
+
+
+
+
+    private async Task Search()
+    {
+        searchResult = (await Service.GetSearchResultWithCondition(searchTerm, false));
+        Console.WriteLine(searchResult.Query);
+        foundNameFlag = searchResult.Query != null;
+        // foundNameFlag = searchResult != null;
+    }
+
+}

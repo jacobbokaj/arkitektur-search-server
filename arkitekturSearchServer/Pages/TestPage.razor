@@ -1,0 +1,77 @@
+﻿@page "/testPage"
+@using SearchProgamModul3.Shared.Models
+@using SearchProgamModul3.Client.Services
+
+
+
+<h3>TestPage</h3>
+
+<form @onsubmit="Search">
+    <input type="text" @bind-value="searchTerm" />
+    <button type="submit">Search</button>
+</form>
+
+
+@if (word.Name != string.Empty)
+{
+    <h1> word target: @word.Name</h1>
+}
+
+    @foreach (var item in words)
+    {
+        <h2>@item.Id ___ @item.Name</h2>
+    }
+
+
+@code {
+
+    private string searchTerm;
+
+    private List<Word> words = new List<Word>();
+    //   private SearchResult 
+    private Word word = new Word();
+
+    [Inject]
+    public IDatabaseService Service { get; set;}
+
+
+
+    private SearchResult searchResult = new SearchResult();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("test testPage");
+       // word = (await Service.GetWord(10));
+         words = (await Service.GetAllWords()).ToList();
+     //   // searchResult = (await Service.GetSearchResultWithCondition("bob", false));
+     // //  Word dataWord = (await Service.GetWord(2));
+     //   // Console.WriteLine("dataWord: " + dataWord.Name);
+        Console.WriteLine("words: " + words[0].Id);
+     //    Console.WriteLine("Name: " + searchResult.Query);
+    }
+
+    private void Search()
+    {
+        // Perform your search logic here using the searchTerm
+        // For example, you might call a method on your service to retrieve the search results
+        // For now, I'll just populate 'words' with dummy data
+
+
+        foreach (var item in words)
+        {
+            if (item.Name == searchTerm)
+            {
+                word = item;
+            }
+        }
+
+
+
+        // words = new List<Word>
+        // {
+        //     new Word { Id = 1, Name = "Result 1" },
+        //     new Word { Id = 2, Name = "Result 2" }
+        //     // Add more results as needed
+        // };
+    }
+}
